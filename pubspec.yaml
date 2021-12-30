@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   file_picker: ^4.2.8
   csv: ^5.0.1
+  http: 
 
 dev_dependencies:
   flutter_test:

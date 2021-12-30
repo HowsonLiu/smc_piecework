@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../manager/artifacts_manager.dart';
 import '../manager/employee_manager.dart';
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
         ),
         MaterialButton(
           onPressed: () {
-            importArtifactsCSVFile();
+            downloadArtifactsCSVFile();
           },
           child: const Text("设置"),
         ),
@@ -60,5 +61,31 @@ class HomePage extends StatelessWidget {
     List<List<dynamic>> data = const CsvToListConverter()
         .convert(const Utf8Decoder().convert(selectedFile.bytes ?? []));
     ArtifactsManager.instance.import(data);
+  }
+
+  downloadArtifactsCSVFile() async {
+    final response = await http.get(Uri.parse(
+        'https://raw.githubusercontent.com/HowsonLiu/smc_piecework/main/data/artifacts.csv'));
+    if (response.statusCode == 200) {
+      List<List<dynamic>> data =
+          const CsvToListConverter(eol: '\n', fieldDelimiter: ',')
+              .convert(const Utf8Decoder().convert(response.bodyBytes));
+      ArtifactsManager.instance.import(data);
+    } else {
+      throw Exception('Failed to download artifacts csv file');
+    }
+  }
+
+  downloadEmployeeCSVFile() async {
+    final response = await http.get(Uri.parse(
+        'https://raw.githubusercontent.com/HowsonLiu/smc_piecework/main/data/employee.csv'));
+    if (response.statusCode == 200) {
+      List<List<dynamic>> data =
+          const CsvToListConverter(eol: '\n', fieldDelimiter: ',')
+              .convert(const Utf8Decoder().convert(response.bodyBytes));
+      EmployeeManager.instance.import(data);
+    } else {
+      throw Exception('Failed to download employee csv file');
+    }
   }
 }
