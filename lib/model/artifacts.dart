@@ -1,6 +1,6 @@
 class ArtifactsProcess {
   String name;
-  int price;
+  double price;
   ArtifactsProcess(this.name, this.price);
 }
 

@@ -6,6 +6,7 @@ import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:smc_piecework/manager/period_manager.dart';
 
 import '../manager/artifacts_manager.dart';
 import '../manager/employee_manager.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(PeriodManager.instance.curPeriod?.name ?? "未设置"),),
         body: Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -23,7 +25,13 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             importEmployeeCSVFile();
           },
-          child: const Text("开始"),
+          child: const Text("入仓"),
+        ),
+        MaterialButton(
+          onPressed: () {
+            downloadArtifactsCSVFile();
+          },
+          child: const Text("统计"),
         ),
         MaterialButton(
           onPressed: () {
