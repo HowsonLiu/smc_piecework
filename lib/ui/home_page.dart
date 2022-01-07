@@ -2,14 +2,16 @@
 
 import 'dart:convert';
 
-import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:smc_piecework/manager/period_manager.dart';
+import 'package:csv/csv.dart';
 
-import '../manager/artifacts_manager.dart';
-import '../manager/employee_manager.dart';
+import 'package:smc_piecework/manager/period_manager.dart';
+import 'package:smc_piecework/manager/artifacts_manager.dart';
+import 'package:smc_piecework/manager/employee_manager.dart';
+
+import 'package:smc_piecework/ui/settings_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,7 +37,9 @@ class HomePage extends StatelessWidget {
         ),
         MaterialButton(
           onPressed: () {
-            downloadArtifactsCSVFile();
+            Navigator.push(context, MaterialPageRoute(builder:(context) {
+              return const SettingsPage();
+            },));
           },
           child: const Text("设置"),
         ),
