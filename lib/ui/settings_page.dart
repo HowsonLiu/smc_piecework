@@ -39,7 +39,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       title: const Text("更新数据"),
                       onTap: () {
-                        
+                        _updateData();
                       },
                     ),
                     ListTile(
@@ -54,5 +54,10 @@ class SettingsPage extends StatelessWidget {
                 ))
           ],
         )));
+  }
+
+  _updateData() async {
+    await EmployeeManager.instance.fetchFromNet();
+    await EmployeeManager.instance.overrideDatabase();
   }
 }
