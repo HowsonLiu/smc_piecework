@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
+import 'package:smc_piecework/ui/period_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage() : super();
@@ -22,6 +23,13 @@ class SettingsPage extends StatelessWidget {
                   return const Text("月份");
                 }),
                 leading: const Icon(Icons.edit),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const PeriodPage();
+                  },
+                ));
+                },
               ),
             ),
             const SizedBox(

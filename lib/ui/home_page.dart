@@ -10,6 +10,7 @@ import 'package:csv/csv.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
+import 'package:smc_piecework/model/period.dart';
 
 import 'package:smc_piecework/ui/settings_page.dart';
 
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(PeriodManager.instance.curPeriod?.name ?? "未设置"),
+          title: const Text("SMC"),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -54,9 +55,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  // ignore: must_call_super
   void initState() {
+    super.initState();
     EmployeeManager.instance.fetchFromDatabase();
+    PeriodManager.instance.fetchFromDatabase();
+    PeriodManager.instance.fetchFromLocalStorage();
   }
 
   importArtifactsCSVFile() async {

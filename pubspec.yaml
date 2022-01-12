@@ -38,6 +38,7 @@ dependencies:
   csv: ^5.0.1
   http: 
   sqflite:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
