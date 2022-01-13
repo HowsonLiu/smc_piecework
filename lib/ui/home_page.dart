@@ -35,9 +35,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text("入仓"),
             ),
             MaterialButton(
-              onPressed: () {
-                downloadArtifactsCSVFile();
-              },
+              onPressed: () {},
               child: const Text("统计"),
             ),
             MaterialButton(
@@ -59,33 +57,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     EmployeeManager.instance.fetchFromDatabase();
     PeriodManager.instance.fetchFromDatabase();
+    ArtifactsManager.instance.fetchFromDatabase();
     PeriodManager.instance.fetchFromLocalStorage();
-  }
-
-  importArtifactsCSVFile() async {
-    PlatformFile? selectedFile;
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        withData: true,
-        type: FileType.custom,
-        allowedExtensions: ['csv']);
-    if (result == null) return;
-    selectedFile = result.files.first;
-    List<List<dynamic>> data = const CsvToListConverter()
-        .convert(const Utf8Decoder().convert(selectedFile.bytes ?? []));
-    ArtifactsManager.instance.import(data);
-  }
-
-  downloadArtifactsCSVFile() async {
-    final response = await http.get(Uri.parse(
-        'https://raw.githubusercontent.com/HowsonLiu/smc_piecework/main/data/artifacts.csv'));
-    if (response.statusCode == 200) {
-      List<List<dynamic>> data =
-          const CsvToListConverter(eol: '\n', fieldDelimiter: ',')
-              .convert(const Utf8Decoder().convert(response.bodyBytes));
-      ArtifactsManager.instance.import(data);
-    } else {
-      throw Exception('Failed to download artifacts csv file');
-    }
   }
 }

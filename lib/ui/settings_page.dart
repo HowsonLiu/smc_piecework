@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/ui/period_page.dart';
 
@@ -67,5 +68,7 @@ class SettingsPage extends StatelessWidget {
   _updateData() async {
     await EmployeeManager.instance.fetchFromNet();
     await EmployeeManager.instance.overrideDatabase();
+    await ArtifactsManager.instance.fetchFromNet();
+    await ArtifactsManager.instance.overrideDatabase();
   }
 }
