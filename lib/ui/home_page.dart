@@ -11,6 +11,7 @@ import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/model/period.dart';
+import 'package:smc_piecework/ui/enter1_page.dart';
 
 import 'package:smc_piecework/ui/settings_page.dart';
 
@@ -31,7 +32,13 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const Enter1Page();
+                  },
+                ));
+              },
               child: const Text("入仓"),
             ),
             MaterialButton(

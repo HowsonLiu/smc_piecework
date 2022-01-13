@@ -16,7 +16,8 @@ class ArtifactsManager {
   final ArtifactsDataBaseHelper _dbHelper = ArtifactsDataBaseHelper();
   final ArtifactsNetHelper _netHelper = ArtifactsNetHelper();
 
-  final Map<String, Artifacts> artifactses = {};
+  final Map<String, Artifacts> _artifactsesMap = {};
+  List<Artifacts> get artifactsList => _artifactsesMap.entries.map((e) => e.value).toList();
 
   fetchFromDatabase() async {
     var m = await _dbHelper.query();
@@ -34,7 +35,7 @@ class ArtifactsManager {
 
   overrideDatabase() async {
     await _dbHelper.clear();
-    artifactses.forEach((key, value) async {
+    _artifactsesMap.forEach((key, value) async {
       for(var p in value.processes) {
         await _dbHelper.insert(p);
       }
@@ -42,7 +43,7 @@ class ArtifactsManager {
   }
 
   _fromList(List<List<dynamic>> data) {
-    artifactses.clear();
+    _artifactsesMap.clear();
     for(var val in data) {
       String artifactsName = val[0];
       var process = ArtifactsProcess(
@@ -50,14 +51,14 @@ class ArtifactsManager {
           processIndex: val[1],
           processName: val[2],
           price:  val[3].toDouble());
-      Artifacts artifacts = artifactses[artifactsName] ?? Artifacts(artifactsName);
+      Artifacts artifacts = _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
       artifacts.addProcess(process);
-      artifactses[artifactsName] = artifacts;
+      _artifactsesMap[artifactsName] = artifacts;
     }
   }
 
   _fromMap(List<Map<String, dynamic>> data) {
-    artifactses.clear();
+    _artifactsesMap.clear();
     for (var val in data) {
       String artifactsName = val[ArtifactsDataBaseHelper.colArtifactsName];
       var process = ArtifactsProcess(
@@ -65,9 +66,9 @@ class ArtifactsManager {
           processIndex: val[ArtifactsDataBaseHelper.colProcessIndex],
           processName: val[ArtifactsDataBaseHelper.colProcessName],
           price: val[ArtifactsDataBaseHelper.colPrice]);
-      Artifacts artifacts = artifactses[artifactsName] ?? Artifacts(artifactsName);
+      Artifacts artifacts = _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
       artifacts.addProcess(process);
-      artifactses[artifactsName] = artifacts;
+      _artifactsesMap[artifactsName] = artifacts;
     }
   }
 }
