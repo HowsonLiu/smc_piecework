@@ -89,7 +89,7 @@ class EmployeeDataBaseHelper {
 
   Future<List<Map<String, dynamic>>?> query() async {
     var db = await database;
-    var res = await db?.query(table, orderBy: '$colId desc');
+    var res = await db?.query(table);
     return res;
   }
 

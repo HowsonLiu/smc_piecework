@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
+import 'package:smc_piecework/ui/common/number_input_dialog.dart';
 import 'package:smc_piecework/ui/enter2_page.dart';
 
 class Enter1Page extends StatefulWidget {
@@ -12,20 +13,16 @@ class Enter1Page extends StatefulWidget {
 }
 
 class _Enter1PageState extends State<Enter1Page> {
-  final TextEditingController _textFieldController = TextEditingController();
-
   Artifacts? _artifacts;
   int? _count;
 
   Artifacts? _selectedArti;
-  bool _okBtnEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _artifacts = null;
     _count = null;
-    _okBtnEnabled = false;
   }
 
   @override
@@ -110,54 +107,19 @@ class _Enter1PageState extends State<Enter1Page> {
   }
 
   Future<void> _onCountInput(BuildContext context) async {
-    return await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState2) {
-          return AlertDialog(
-            title: const Text('工件数量'),
-            content: TextField(
-              controller: _textFieldController,
-              decoration: const InputDecoration(hintText: "数量"),
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-              ],
-              onChanged: (text) {
-                setState2(() {
-                  _okBtnEnabled = text.isNotEmpty;
-                });
-              },
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('取消'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              TextButton(
-                child: const Text('确定'),
-                onPressed: _okBtnEnabled
-                    ? () {
-                        setState(() {
-                          _count = int.parse(_textFieldController.text);
-                        });
-                        Navigator.pop(context);
-                      }
-                    : null,
-              ),
-            ],
-          );
-        });
-      },
-    );
+    return await showNumberInputDialog(
+        context: context,
+        title: '工件数量',
+        hint: '数量',
+        callback: (count) => setState(() => _count = count));
   }
 
   Future<void> _onNextStep(BuildContext context) async {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return _artifacts != null && _count != null ? Enter2Page(arti: _artifacts!, count: _count!) : Container();
+        return _artifacts != null && _count != null
+            ? Enter2Page(arti: _artifacts!, count: _count!)
+            : Container();
       },
     ));
   }
