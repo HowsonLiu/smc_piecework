@@ -38,9 +38,11 @@ class _Enter2PageState extends State<Enter2Page> {
             ListView.builder(
               itemBuilder: (context, index) {
                 var processes = widget.arti.processes;
+                var jobList = _jobs[processes[index]];
                 return ListTile(
                   leading: Text(processes[index].processIndex.toString()),
                   title: Text(processes[index].processName),
+                  subtitle: Text(_getSubTitleText(jobList)),
                   trailing: Icon(_jobs[processes[index]]?.isNotEmpty ?? false
                       ? Icons.check
                       : null),
@@ -66,5 +68,10 @@ class _Enter2PageState extends State<Enter2Page> {
     setState(() {
       _jobs[process] = res;
     });
+  }
+
+  _getSubTitleText(List<Job>? jobs) {
+    if(jobs?.isEmpty ?? true) return '未设置';
+    return jobs?.join(', ');
   }
 }

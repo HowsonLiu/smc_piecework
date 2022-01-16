@@ -13,4 +13,9 @@ class Job {
       required this.process,
       required this.count,
       required this.price});
+
+  @override
+  String toString() {
+    return "$worker($count)";
+  }
 }
