@@ -16,6 +16,7 @@ class EmployeeManager {
 
   final EmployeeDataBaseHelper _dbHelper = EmployeeDataBaseHelper();
   final EmployeeNetHelper _netHelper = EmployeeNetHelper();
+  final EmployeeFileHelper _fileHelper = EmployeeFileHelper();
   List<Employee> employees = [];
 
   fetchFromDatabase() async {
@@ -27,6 +28,13 @@ class EmployeeManager {
 
   fetchFromNet() async {
     var l = await _netHelper.query();
+    if (l != null) {
+      _fromList(l);
+    }
+  }
+
+  fetchFromFile() async {
+    var l = await _fileHelper.fetch();
     if (l != null) {
       _fromList(l);
     }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
+
 import '../model/artifacts.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -15,9 +17,11 @@ class ArtifactsManager {
 
   final ArtifactsDataBaseHelper _dbHelper = ArtifactsDataBaseHelper();
   final ArtifactsNetHelper _netHelper = ArtifactsNetHelper();
+  final ArtifactsFileHelper _fileHelper = ArtifactsFileHelper();
 
   final Map<String, Artifacts> _artifactsesMap = {};
-  List<Artifacts> get artifactsList => _artifactsesMap.entries.map((e) => e.value).toList();
+  List<Artifacts> get artifactsList =>
+      _artifactsesMap.entries.map((e) => e.value).toList();
 
   fetchFromDatabase() async {
     var m = await _dbHelper.query();
@@ -33,10 +37,17 @@ class ArtifactsManager {
     }
   }
 
+  fetchFromFile() async {
+    var l = await _fileHelper.fetch();
+    if (l != null) {
+      _fromList(l);
+    }
+  }
+
   overrideDatabase() async {
     await _dbHelper.clear();
     _artifactsesMap.forEach((key, value) async {
-      for(var p in value.processes) {
+      for (var p in value.processes) {
         await _dbHelper.insert(p);
       }
     });
@@ -44,14 +55,15 @@ class ArtifactsManager {
 
   _fromList(List<List<dynamic>> data) {
     _artifactsesMap.clear();
-    for(var val in data) {
+    for (var val in data) {
       String artifactsName = val[0];
       var process = ArtifactsProcess(
           artifactsName: artifactsName,
           processIndex: val[1],
           processName: val[2],
-          price:  val[3].toDouble());
-      Artifacts artifacts = _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
+          price: val[3].toDouble());
+      Artifacts artifacts =
+          _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
       artifacts.addProcess(process);
       _artifactsesMap[artifactsName] = artifacts;
     }
@@ -66,7 +78,8 @@ class ArtifactsManager {
           processIndex: val[ArtifactsDataBaseHelper.colProcessIndex],
           processName: val[ArtifactsDataBaseHelper.colProcessName],
           price: val[ArtifactsDataBaseHelper.colPrice]);
-      Artifacts artifacts = _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
+      Artifacts artifacts =
+          _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
       artifacts.addProcess(process);
       _artifactsesMap[artifactsName] = artifacts;
     }
@@ -132,6 +145,24 @@ class ArtifactsNetHelper {
     if (response.statusCode == 200) {
       data = const CsvToListConverter(eol: '\n', fieldDelimiter: ',')
           .convert(const Utf8Decoder().convert(response.bodyBytes));
+    }
+    return data;
+  }
+}
+
+class ArtifactsFileHelper {
+  Future<List<List<dynamic>>?> fetch() async {
+    List<List<dynamic>>? data;
+    PlatformFile? selectedFile;
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        withData: true,
+        type: FileType.custom,
+        allowedExtensions: ['csv']);
+    if (result != null) {
+      selectedFile = result.files.first;
+      data = const CsvToListConverter()
+          .convert(const Utf8Decoder().convert(selectedFile.bytes ?? []));
     }
     return data;
   }

@@ -46,9 +46,19 @@ class SettingsPage extends StatelessWidget {
                         Icons.download,
                         color: Colors.purple,
                       ),
-                      title: const Text("更新数据"),
+                      title: const Text("从网络更新数据"),
                       onTap: () {
-                        _updateData();
+                        _updateFromNet();
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                        Icons.download,
+                        color: Colors.purple,
+                      ),
+                      title: const Text("从本地更新数据"),
+                      onTap: () {
+                        _updateFromFile();
                       },
                     ),
                     ListTile(
@@ -65,10 +75,17 @@ class SettingsPage extends StatelessWidget {
         )));
   }
 
-  _updateData() async {
+  _updateFromNet() async {
     await EmployeeManager.instance.fetchFromNet();
     await EmployeeManager.instance.overrideDatabase();
     await ArtifactsManager.instance.fetchFromNet();
+    await ArtifactsManager.instance.overrideDatabase();
+  }
+
+  _updateFromFile() async {
+    await EmployeeManager.instance.fetchFromFile();
+    await EmployeeManager.instance.overrideDatabase();
+    await ArtifactsManager.instance.fetchFromFile();
     await ArtifactsManager.instance.overrideDatabase();
   }
 }
