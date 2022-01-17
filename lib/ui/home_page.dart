@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:csv/csv.dart';
+import 'package:smc_piecework/manager/job_manager.dart';
 
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/manager/artifacts_manager.dart';
@@ -66,5 +67,6 @@ class _HomePageState extends State<HomePage> {
     PeriodManager.instance.fetchFromDatabase();
     ArtifactsManager.instance.fetchFromDatabase();
     PeriodManager.instance.fetchFromLocalStorage();
+    JobManager.instance.fetchFromDataBase();
   }
 }

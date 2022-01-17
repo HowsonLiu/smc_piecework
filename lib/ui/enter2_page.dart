@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
 import 'package:smc_piecework/model/job.dart';
+import 'package:smc_piecework/ui/common/message_dialog.dart';
 import 'package:smc_piecework/ui/enter3_page.dart';
 
 class Enter2Page extends StatefulWidget {
@@ -30,8 +32,11 @@ class _Enter2PageState extends State<Enter2Page> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("入仓"),
+        actions: [
+          IconButton(onPressed: _finish, icon: const Icon(Icons.check))
+        ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Text('${widget.arti.name}——${widget.count}件'),
@@ -65,13 +70,40 @@ class _Enter2PageState extends State<Enter2Page> {
       },
     ));
 
-    setState(() {
-      _jobs[process] = res;
-    });
+    if (res != null) {
+      setState(() {
+        _jobs[process] = res;
+      });
+    }
   }
 
   _getSubTitleText(List<Job>? jobs) {
-    if(jobs?.isEmpty ?? true) return '未设置';
+    if (jobs?.isEmpty ?? true) return '未设置';
     return jobs?.join(', ');
+  }
+
+  _checkValid() {
+    bool res = true;
+    _jobs.forEach((key, value) {
+      if (value.isEmpty) res = false;
+    });
+    return res;
+  }
+
+  _finish() async {
+    if (!_checkValid()) {
+      await showMessageDialog(context, '错误❌', '请检查是否所有工序都已完成');
+    } else {
+      // todo double check
+      DateTime enterTime = DateTime.now();
+      _jobs.forEach((key, value) {
+        for (var element in value) {
+          element.ticket = enterTime;
+        }
+        JobManager.instance.addJobs(value);
+      });
+      await showMessageDialog(context, '成功', '入仓成功');
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
   }
 }

@@ -165,7 +165,8 @@ class _Enter3PageState extends State<Enter3Page> {
           artifacts: widget.process.artifactsName,
           process: widget.process.processName,
           price: widget.process.price,
-          count: item.count));
+          count: item.count,
+          valid: 1));
     }
   }
 
