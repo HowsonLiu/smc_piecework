@@ -15,6 +15,7 @@ import 'package:smc_piecework/model/period.dart';
 import 'package:smc_piecework/ui/enter1_page.dart';
 
 import 'package:smc_piecework/ui/settings_page.dart';
+import 'package:smc_piecework/ui/statistics_page.dart';
 
 // ignore: use_key_in_widget_constructors
 class HomePage extends StatefulWidget {
@@ -43,7 +44,13 @@ class _HomePageState extends State<HomePage> {
               child: const Text("入仓"),
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const StatisticsPage();
+                  },
+                ));
+              },
               child: const Text("统计"),
             ),
             MaterialButton(
