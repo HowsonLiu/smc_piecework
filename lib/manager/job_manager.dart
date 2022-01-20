@@ -1,3 +1,4 @@
+import 'package:smc_piecework/model/employee.dart';
 import 'package:smc_piecework/model/job.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -28,6 +29,13 @@ class JobManager {
     for (var job in jobs) {
       _dbHelper.insert(job);
     }
+  }
+
+  List<Job> getJobs(String period, Employee e) {
+    return jobs
+        .where(
+            (element) => element.period == period && element.worker == e.name)
+        .toList();
   }
 
   _fromMap(List<Map<String, dynamic>> data) {

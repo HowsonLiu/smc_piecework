@@ -3,6 +3,7 @@ import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/ui/period_page.dart';
+import 'package:smc_piecework/ui/statistics_employee_page.dart';
 
 class StatisticsPage extends StatelessWidget {
   const StatisticsPage() : super();
@@ -24,13 +25,21 @@ class StatisticsPage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: Column(
-                children: const [
+                children: [
                   ListTile(
-                    leading: Icon(Icons.people),
-                    title: Text("按照员工分类"),
-                    trailing: Icon(Icons.arrow_right),
+                    leading: const Icon(Icons.people),
+                    title: const Text("按照员工分类"),
+                    trailing: const Icon(Icons.arrow_right),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return StatisticsEmployeePage(
+                            period:
+                                PeriodManager.instance.curPeriod?.name ?? '');
+                      }));
+                    },
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.list),
                     title: Text("按照工单分类"),
                     trailing: Icon(Icons.arrow_right),
