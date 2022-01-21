@@ -4,6 +4,7 @@ import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/ui/period_page.dart';
 import 'package:smc_piecework/ui/statistics_employee_page.dart';
+import 'package:smc_piecework/ui/statistics_ticket_page.dart';
 
 class StatisticsPage extends StatelessWidget {
   const StatisticsPage() : super();
@@ -39,10 +40,18 @@ class StatisticsPage extends StatelessWidget {
                       }));
                     },
                   ),
-                  const ListTile(
-                    leading: Icon(Icons.list),
-                    title: Text("按照工单分类"),
-                    trailing: Icon(Icons.arrow_right),
+                  ListTile(
+                    leading: const Icon(Icons.list),
+                    title: const Text("按照工单分类"),
+                    trailing: const Icon(Icons.arrow_right),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return StatisticsTicketPage(
+                            period:
+                                PeriodManager.instance.curPeriod?.name ?? '');
+                      }));
+                    },
                   ),
                 ],
               ),
