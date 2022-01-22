@@ -12,8 +12,9 @@ enum NumberInputDialogResultState {
 extension NumberInputDialogResultStateExtension
     on NumberInputDialogResultState {
   static NumberInputDialogResultState getState(String? text, int min, int max) {
-    if (text == null || text.isEmpty)
+    if (text == null || text.isEmpty) {
       return NumberInputDialogResultState.kEmpty;
+    }
     int value = int.parse(text);
     if (value < min) return NumberInputDialogResultState.kOverflowMin;
     if (value > max) return NumberInputDialogResultState.kOverflowMax;
@@ -49,6 +50,7 @@ Future<void> showNumberInputDialog(
         return AlertDialog(
           title: Text(title),
           content: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
@@ -65,12 +67,14 @@ Future<void> showNumberInputDialog(
                           _textFieldController.text, minVal, maxVal));
                 },
               ),
-              Expanded(
-                  child: Text(
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
                 NumberInputDialogResultStateExtension.getStateTips(state) ?? '',
                 style: const TextStyle(color: Colors.red),
                 maxLines: 1,
-              ))
+              )
             ],
           ),
           actions: <Widget>[
