@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
+import 'package:smc_piecework/ui/common/double_check_dialog.dart';
 import 'package:smc_piecework/ui/common/number_input_dialog.dart';
 import 'package:smc_piecework/ui/enter2_page.dart';
 import 'package:smc_piecework/ui/period_page.dart';
@@ -109,6 +110,9 @@ class _Enter1PageState extends State<Enter1Page> {
   }
 
   Future<void> _onNextStep(BuildContext context) async {
+    bool res = await showDoubleCheckDialog(
+        context, '请再次确认', '入仓${_artifacts?.name}${_count.toString()}件');
+    if (res == false) return;
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
         return _artifacts != null && _count != null
