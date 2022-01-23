@@ -21,6 +21,7 @@ class JobManager {
   }
 
   clearDataBase() async {
+    _jobs.clear();
     await _dbHelper.clear();
   }
 
