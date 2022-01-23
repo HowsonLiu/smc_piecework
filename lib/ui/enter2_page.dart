@@ -49,7 +49,11 @@ class _Enter2PageState extends State<Enter2Page> {
   _onProcessEdited(ArtifactsProcess process) async {
     final res = await Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return Enter3Page(process: process, count: widget.count);
+        return Enter3Page(
+          process: process,
+          count: widget.count,
+          tempJobs: _tempJobs[process] ?? [],
+        );
       },
     ));
 
