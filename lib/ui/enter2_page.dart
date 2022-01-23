@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
@@ -19,48 +17,33 @@ class Enter2Page extends StatefulWidget {
 }
 
 class _Enter2PageState extends State<Enter2Page> {
-  final Map<ArtifactsProcess, List<Job>> _jobs = {};
+  final Map<ArtifactsProcess, List<TempJob>> _tempJobs = {};
 
   @override
   void initState() {
     super.initState();
-    _jobs.clear();
+    _tempJobs.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("入仓"),
-        actions: [
-          IconButton(onPressed: _finish, icon: const Icon(Icons.check))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Text('${widget.arti.name}——${widget.count}件'),
-            ListView.builder(
-              itemBuilder: (context, index) {
-                var processes = widget.arti.processes;
-                var jobList = _jobs[processes[index]];
-                return ListTile(
-                  leading: Text(processes[index].processIndex.toString()),
-                  title: Text(processes[index].processName),
-                  subtitle: Text(_getSubTitleText(jobList)),
-                  trailing: Icon(_jobs[processes[index]]?.isNotEmpty ?? false
-                      ? Icons.check
-                      : null),
-                  onTap: () => _onProcessEdited(processes[index]),
-                );
-              },
-              itemCount: widget.arti.processes.length,
-              shrinkWrap: true,
-            ),
+        appBar: AppBar(
+          title: const Text("入仓"),
+          actions: [
+            IconButton(onPressed: _finish, icon: const Icon(Icons.check))
           ],
         ),
-      ),
-    );
+        body: Container(
+            margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+            child: Column(children: [
+              _buildArtifactsTitle(),
+              _buildCountTitle(),
+              const SizedBox(
+                height: 30,
+              ),
+              _buildListView(),
+            ])));
   }
 
   _onProcessEdited(ArtifactsProcess process) async {
@@ -72,19 +55,14 @@ class _Enter2PageState extends State<Enter2Page> {
 
     if (res != null) {
       setState(() {
-        _jobs[process] = res;
+        _tempJobs[process] = res;
       });
     }
   }
 
-  _getSubTitleText(List<Job>? jobs) {
-    if (jobs?.isEmpty ?? true) return '未设置';
-    return jobs?.join(', ');
-  }
-
   _checkValid() {
     bool res = true;
-    _jobs.forEach((key, value) {
+    _tempJobs.forEach((key, value) {
       if (value.isEmpty) res = false;
     });
     return res;
@@ -96,14 +74,73 @@ class _Enter2PageState extends State<Enter2Page> {
     } else {
       // todo double check
       DateTime enterTime = DateTime.now();
-      _jobs.forEach((key, value) {
+      _tempJobs.forEach((key, value) {
         for (var element in value) {
-          element.ticket = enterTime;
+          Job j =
+              Job.fromTempJob(tempJob: element, ticket: enterTime, valid: 1);
+          JobManager.instance.addJob(j);
         }
-        JobManager.instance.addJobs(value);
       });
       await showMessageDialog(context, '成功', '入仓成功');
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
+  }
+
+  Widget _buildArtifactsTitle() {
+    return Container(
+        margin: const EdgeInsets.all(20),
+        child: Text(
+          widget.arti.name,
+          style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+        ));
+  }
+
+  Widget _buildCountTitle() {
+    return Container(
+        margin: const EdgeInsets.all(20),
+        child: Text(
+          '${widget.count}件',
+          style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+        ));
+  }
+
+  Widget _buildListView() {
+    return Expanded(
+        child: ListView.builder(
+      padding: const EdgeInsets.only(left: 70, right: 70),
+      itemBuilder: _buildListItem,
+      itemCount: widget.arti.processes.length,
+    ));
+  }
+
+  Widget _buildListItem(context, index) {
+    var process = widget.arti.processes[index];
+    var jobList = _tempJobs[process] ?? [];
+    var subTitle = List<String>.from(jobList.map((e) {
+      var countStr = e.count == widget.count ? '*' : e.count.toString();
+      return "${e.worker}($countStr)";
+    })).toList().join(', ');
+    return ListTile(
+      leading: Text(
+        process.processIndex.toString(),
+        style: const TextStyle(fontSize: 20),
+      ),
+      title: Text(
+        process.processName,
+        style: const TextStyle(fontSize: 20),
+      ),
+      subtitle: Text(
+        subTitle,
+        style: const TextStyle(fontSize: 15),
+      ),
+      trailing: Icon(
+        _tempJobs[process]?.isNotEmpty ?? false
+            ? Icons.check
+            : Icons.arrow_right,
+        color:
+            _tempJobs[process]?.isNotEmpty ?? false ? Colors.greenAccent : null,
+      ),
+      onTap: () => _onProcessEdited(process),
+    );
   }
 }

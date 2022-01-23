@@ -27,13 +27,13 @@ class Enter3Page extends StatefulWidget {
 }
 
 class _Enter3PageState extends State<Enter3Page> {
-  final List<Job> _jobs = [];
+  final List<TempJob> _tempJobs = [];
   final List<JobListItem> _jobItems = [];
 
   @override
   void initState() {
     super.initState();
-    _jobs.clear();
+    _tempJobs.clear();
   }
 
   @override
@@ -156,17 +156,17 @@ class _Enter3PageState extends State<Enter3Page> {
     return totalCount == widget.count;
   }
 
-  _convertItemsToJobs() {
-    _jobs.clear();
+  _convertItemsToTempJobs() {
+    _tempJobs.clear();
     for (var item in _jobItems) {
-      _jobs.add(Job(
-          period: PeriodManager.instance.curPeriod?.name ?? '',
-          worker: item.employee?.name ?? '',
-          artifacts: widget.process.artifactsName,
-          process: widget.process.processName,
-          price: widget.process.price,
-          count: item.count,
-          valid: 1));
+      _tempJobs.add(TempJob(
+        period: PeriodManager.instance.curPeriod?.name ?? '',
+        worker: item.employee?.name ?? '',
+        artifacts: widget.process.artifactsName,
+        process: widget.process.processName,
+        price: widget.process.price,
+        count: item.count,
+      ));
     }
   }
 
@@ -174,8 +174,8 @@ class _Enter3PageState extends State<Enter3Page> {
     if (!_checkItemsValid()) {
       showMessageDialog(context, '错误❌', '请检查工单是否正确');
     } else {
-      _convertItemsToJobs();
-      Navigator.pop(context, _jobs);
+      _convertItemsToTempJobs();
+      Navigator.pop(context, _tempJobs);
     }
   }
 }

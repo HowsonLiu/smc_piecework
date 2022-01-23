@@ -24,6 +24,11 @@ class JobManager {
     await _dbHelper.clear();
   }
 
+  addJob(Job job) {
+    _jobs.add(job);
+    _dbHelper.insert(job);
+  }
+
   addJobs(List<Job> jobs) {
     _jobs.addAll(jobs);
     for (var job in jobs) {
