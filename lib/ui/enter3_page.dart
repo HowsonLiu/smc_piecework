@@ -169,28 +169,27 @@ class _Enter3PageState extends State<Enter3Page> {
   }
 
   _setEmployee(JobListItem item) async {
-    return await showEmployeeInputDialog(context, "作业工人", (employee) {
-      setState(() {
-        item.employee = employee;
-        _combineSame();
-      });
+    var e = await showEmployeeInputDialog(context, "作业工人");
+    if (e == null) return;
+    setState(() {
+      item.employee = e;
+      _combineSame();
     });
   }
 
   _setCount(JobListItem item) async {
-    return await showNumberInputDialog(
+    var c = await showNumberInputDialog(
         context: context,
         title: "工件数量",
         hint: "数量",
         minValue: 1,
         defalutValue: item.count,
-        maxValue: item.count,
-        callback: (count) {
-          setState(() {
-            item.count = count;
-            _combineSame();
-          });
-        });
+        maxValue: item.count);
+    if (c == null) return;
+    setState(() {
+      item.count = c;
+      _combineSame();
+    });
   }
 
   _combineSame() {

@@ -28,11 +28,10 @@ extension NumberInputDialogResultStateExtension
   }
 }
 
-Future<void> showNumberInputDialog(
+Future<int?> showNumberInputDialog(
     {required BuildContext context,
     required String title,
     required String hint,
-    required Function callback,
     int? minValue,
     int? defalutValue,
     int? maxValue}) async {
@@ -87,10 +86,8 @@ Future<void> showNumberInputDialog(
             TextButton(
               child: const Text('确定'),
               onPressed: state == NumberInputDialogResultState.kOk
-                  ? () {
-                      callback(int.parse(_textFieldController.text));
-                      Navigator.pop(context);
-                    }
+                  ? () => Navigator.pop(
+                      context, int.parse(_textFieldController.text))
                   : null,
             ),
           ],

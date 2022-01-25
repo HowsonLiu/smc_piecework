@@ -55,11 +55,10 @@ class _Enter1PageState extends State<Enter1Page> {
   }
 
   Future<void> _onCountInput(BuildContext context) async {
-    return await showNumberInputDialog(
-        context: context,
-        title: '工件数量',
-        hint: '数量',
-        callback: (count) => setState(() => _count = count));
+    var c = await showNumberInputDialog(
+        context: context, title: '工件数量', hint: '数量');
+    if (c == null) return;
+    setState(() => _count = c);
   }
 
   Future<void> _onNextStep(BuildContext context) async {

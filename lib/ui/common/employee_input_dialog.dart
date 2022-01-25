@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/model/employee.dart';
 
-Future<void> showEmployeeInputDialog(
-    BuildContext context, String title, Function callback) async {
+Future<Employee?> showEmployeeInputDialog(
+    BuildContext context, String title) async {
   Employee? _selectEmployee;
   List<Employee> _showEmployeeList = EmployeeManager.instance.employees;
   return await showDialog(
@@ -59,18 +59,12 @@ Future<void> showEmployeeInputDialog(
               ]),
           actions: <Widget>[
             TextButton(
-              child: const Text('取消'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+                child: const Text('取消'),
+                onPressed: () => Navigator.pop(context)),
             TextButton(
               child: const Text('确定'),
               onPressed: _selectEmployee != null
-                  ? () {
-                      callback(_selectEmployee);
-                      Navigator.pop(context);
-                    }
+                  ? () => Navigator.pop(context, _selectEmployee)
                   : null,
             ),
           ],
