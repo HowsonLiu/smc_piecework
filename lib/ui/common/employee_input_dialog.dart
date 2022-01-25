@@ -46,16 +46,9 @@ Future<void> showEmployeeInputDialog(
                                     children: [
                                       Expanded(
                                           flex: 1,
-                                          child: Text(
-                                            employee.id.toString(),
-                                            // textAlign: TextAlign.center,
-                                          )),
+                                          child: Text(employee.id.toString())),
                                       Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            employee.name,
-                                            // textAlign: TextAlign.center,
-                                          ))
+                                          flex: 1, child: Text(employee.name))
                                     ],
                                   ),
                                   onTap: () {
