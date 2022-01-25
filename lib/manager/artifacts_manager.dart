@@ -57,13 +57,14 @@ class ArtifactsManager {
     _artifactsesMap.clear();
     for (var val in data) {
       String artifactsName = val[0];
-      var process = ArtifactsProcess(
-          artifactsName: artifactsName,
-          processIndex: val[1],
-          processName: val[2],
-          price: val[3].toDouble());
       Artifacts artifacts =
           _artifactsesMap[artifactsName] ?? Artifacts(artifactsName);
+      var processIndex = artifacts.processes.length + 1;
+      var process = ArtifactsProcess(
+          artifactsName: artifactsName,
+          processIndex: processIndex,
+          processName: val[1],
+          price: val[2].toDouble());
       artifacts.addProcess(process);
       _artifactsesMap[artifactsName] = artifacts;
     }
