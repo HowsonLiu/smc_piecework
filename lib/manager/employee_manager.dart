@@ -50,7 +50,7 @@ class EmployeeManager {
   _fromList(List<List<dynamic>> data) {
     employees.clear();
     data.asMap().forEach((index, val) {
-      employees.add(Employee.fromFlat(index + 1, val[0]));
+      employees.add(Employee.fromFlat(val[0], val[1]));
     });
   }
 

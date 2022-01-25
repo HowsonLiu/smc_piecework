@@ -3,16 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
-import 'package:smc_piecework/manager/period_manager.dart';
-import 'package:smc_piecework/model/employee.dart';
-import 'package:smc_piecework/model/job.dart';
-import 'package:smc_piecework/model/period.dart';
 import 'package:smc_piecework/ui/statistics_employee_detail_page.dart';
 
 class StatisticsEmployeePage extends StatefulWidget {
-  StatisticsEmployeePage({required this.period, Key? key}) : super(key: key);
+  const StatisticsEmployeePage({required this.period, Key? key})
+      : super(key: key);
 
-  String period;
+  final String period;
 
   @override
   State<StatisticsEmployeePage> createState() => _StatisticsEmployeePageState();
@@ -35,38 +32,101 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
           tooltip: "导出",
           onPressed: () => _onSaveButtonClick(context),
         ),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: EmployeeManager.instance.employees.length,
-                itemBuilder: (context, index) =>
-                    _buildListItem(context, index)),
-          ],
-        )));
+        body: Container(
+          margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+          child: Column(
+            children: [
+              _buildPeriodTitle(),
+              const SizedBox(
+                height: 50,
+              ),
+              _buildTable()
+            ],
+          ),
+        ));
   }
 
-  Widget _buildListItem(context, index) {
-    var employee = EmployeeManager.instance.employees[index];
-    List<Job> employeeJobs =
-        JobManager.instance.getJobs(widget.period, employee);
-    num sum = 0;
-    for (var j in employeeJobs) {
-      sum += j.count * j.price;
-    }
-    return ListTile(
-      title: Text(employee.name),
-      subtitle: Text(sum.toString()),
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return StatisticsEmployeeDetailPage(
-            employee: employee,
-            employeeJobs: employeeJobs,
-          );
-        }));
-      },
+  Widget _buildPeriodTitle() {
+    return Text(
+      widget.period,
+      style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
     );
+  }
+
+  Widget _buildTable() {
+    return Expanded(
+        child: SingleChildScrollView(
+            child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DataTable(columns: const [
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '工号',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '名字',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '本月薪资',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '详情',
+            textAlign: TextAlign.center,
+          ))),
+        ], rows: _buildTableRow()),
+      ],
+    )));
+  }
+
+  List<DataRow> _buildTableRow() {
+    List<DataRow> dataRows = [];
+    for (var e in EmployeeManager.instance.employees) {
+      var employeeJobs = JobManager.instance.getJobs(widget.period, e);
+      num sum = 0;
+      for (var element in employeeJobs) {
+        sum += element.count * element.price;
+      }
+      dataRows.add(DataRow(cells: [
+        DataCell(Center(
+            child: Text(
+          e.id.toString(),
+        ))),
+        DataCell(Center(
+            child: Text(
+          e.name,
+        ))),
+        DataCell(Center(
+            child: Text(
+          sum.toString(),
+        ))),
+        DataCell(Center(
+            child: TextButton(
+          child: const Text('查看详情'),
+          onPressed: () => _jumpToDetailPage(context, e, employeeJobs),
+        )))
+      ]));
+    }
+    return dataRows;
+  }
+
+  _jumpToDetailPage(context, employee, employeeJobs) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return StatisticsEmployeeDetailPage(
+        employee: employee,
+        employeeJobs: employeeJobs,
+      );
+    }));
   }
 
   Future<void> _onSaveButtonClick(BuildContext context) async {}
