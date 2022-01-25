@@ -40,7 +40,7 @@ class _StatisticsEmployeeDetailPageState
           title: const Text("员工统计"),
         ),
         body: Container(
-          margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+          margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
           child: Column(
             children: [
               _buildEmployeeTitle(),
