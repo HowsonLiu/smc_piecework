@@ -7,14 +7,19 @@ import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/employee.dart';
 import 'package:smc_piecework/model/job.dart';
 import 'package:smc_piecework/model/period.dart';
+import 'package:smc_piecework/utils/time_utils.dart';
 
 class StatisticsEmployeeDetailPage extends StatefulWidget {
-  StatisticsEmployeeDetailPage(
-      {required this.employee, required this.employeeJobs, Key? key})
+  const StatisticsEmployeeDetailPage(
+      {required this.employee,
+      required this.employeeJobs,
+      required this.period,
+      Key? key})
       : super(key: key);
 
-  Employee employee;
-  List<Job> employeeJobs;
+  final String period;
+  final Employee employee;
+  final List<Job> employeeJobs;
 
   @override
   State<StatisticsEmployeeDetailPage> createState() =>
@@ -34,49 +39,94 @@ class _StatisticsEmployeeDetailPageState
         appBar: AppBar(
           title: const Text("员工统计"),
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+          child: Column(
+            children: [
+              _buildEmployeeTitle(),
+              const SizedBox(height: 30),
+              _buildPeriodTitle(),
+              const SizedBox(height: 50),
+              _buildTable()
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildPeriodTitle() {
+    return Text(
+      widget.period,
+      style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildEmployeeTitle() {
+    return Text(
+      widget.employee.name,
+      style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildTable() {
+    return Expanded(
+        child: SingleChildScrollView(
             child: Column(
-          children: [
-            Text(widget.employee.name),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.employeeJobs.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) return _buildListHeader(context);
-                  return _buildListItem(context, index - 1);
-                })
-          ],
-        )));
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DataTable(columns: const [
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '入仓时间',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '工件',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '工序',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '单价',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '数量',
+            textAlign: TextAlign.center,
+          ))),
+          DataColumn(
+              label: Expanded(
+                  child: Text(
+            '总价',
+            textAlign: TextAlign.center,
+          ))),
+        ], rows: _buildTableRow()),
+      ],
+    )));
   }
 
-  Widget _buildListHeader(context) {
-    return ListTile(
-      title: Row(
-        children: const [
-          Expanded(child: Text('入仓时间')),
-          Expanded(child: Text('工件')),
-          Expanded(child: Text('工序')),
-          Expanded(child: Text('单价')),
-          Expanded(child: Text('数量')),
-          Expanded(child: Text('总价')),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildListItem(context, index) {
-    var curJob = widget.employeeJobs[index];
-    return ListTile(
-      title: Row(
-        children: [
-          Expanded(child: Text(curJob.ticket.toString())),
-          Expanded(child: Text(curJob.artifacts)),
-          Expanded(child: Text(curJob.process)),
-          Expanded(child: Text(curJob.price.toString())),
-          Expanded(child: Text(curJob.count.toString())),
-          Expanded(child: Text((curJob.price * curJob.count).toString())),
-        ],
-      ),
-    );
+  List<DataRow> _buildTableRow() {
+    List<DataRow> dataRows = [];
+    for (var job in widget.employeeJobs) {
+      dataRows.add(DataRow(cells: [
+        DataCell(Center(child: Text(getTimeStr(job.ticket)))),
+        DataCell(Center(child: Text(job.artifacts))),
+        DataCell(Center(child: Text(job.process))),
+        DataCell(Center(child: Text(job.price.toString()))),
+        DataCell(Center(child: Text(job.count.toString()))),
+        DataCell(Center(child: Text((job.count * job.price).toString()))),
+      ]));
+    }
+    return dataRows;
   }
 }

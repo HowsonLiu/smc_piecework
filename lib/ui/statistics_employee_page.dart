@@ -113,7 +113,9 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
         DataCell(Center(
             child: TextButton(
           child: const Text('查看详情'),
-          onPressed: () => _jumpToDetailPage(context, e, employeeJobs),
+          onPressed: sum != 0
+              ? () => _jumpToDetailPage(context, e, employeeJobs)
+              : null,
         )))
       ]));
     }
@@ -123,6 +125,7 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
   _jumpToDetailPage(context, employee, employeeJobs) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return StatisticsEmployeeDetailPage(
+        period: widget.period,
         employee: employee,
         employeeJobs: employeeJobs,
       );
