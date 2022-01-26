@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/model/job.dart';
+import 'package:smc_piecework/ui/common/double_check_dialog.dart';
 import 'package:smc_piecework/utils/time_utils.dart';
 
 class StatisticsTicketPageListItem {
   DateTime ticket;
   String artifacts;
+  int count;
   List<Job> jobs;
   bool isExpanded;
 
@@ -15,6 +17,7 @@ class StatisticsTicketPageListItem {
       {required this.ticket,
       required this.artifacts,
       required this.jobs,
+      required this.count,
       required this.isExpanded});
 }
 
@@ -49,15 +52,37 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
           tooltip: "导出",
           onPressed: () => _onSaveButtonClick(context),
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+          child: Column(
+            children: [
+              _buildPeriodTitle(),
+              const SizedBox(height: 50),
+              _buildPanelList()
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildPeriodTitle() {
+    return Text(
+      widget.period,
+      style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildPanelList() {
+    return Expanded(
+        child: SingleChildScrollView(
             child: ExpansionPanelList(
-          animationDuration: const Duration(milliseconds: 500),
-          children: _buildPanelItem(context),
-          expansionCallback: (panelIndex, isExpanded) {
-            _items[panelIndex].isExpanded = !isExpanded;
-            setState(() {});
-          },
-        )));
+      animationDuration: const Duration(milliseconds: 500),
+      children: _buildPanelItem(context),
+      expansionCallback: (panelIndex, isExpanded) {
+        setState(() {
+          _items[panelIndex].isExpanded = !isExpanded;
+        });
+      },
+    )));
   }
 
   _generateJobMapAndItems() {
@@ -67,12 +92,13 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
     for (var j in periodJobs) {
       var l = _jobMap[j.ticket] ?? [];
       l.add(j);
-      _jobMap[j.ticket!] = l;
+      _jobMap[j.ticket] = l;
     }
     for (var k in _jobMap.keys) {
       _items.add(StatisticsTicketPageListItem(
           ticket: k,
           artifacts: _jobMap[k]?.first.artifacts ?? '',
+          count: _jobMap[k]?.first.count ?? 0,
           jobs: _jobMap[k] ?? [],
           isExpanded: false));
     }
@@ -83,48 +109,99 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
       return ExpansionPanel(
         headerBuilder: (context, isExpanded) {
           return ListTile(
-            title: Text(getTimeStr(item.ticket) + ', ' + item.artifacts),
+            title: Text('${item.artifacts}(${item.count})'),
+            subtitle: Text(getTimeStr(item.ticket)),
           );
         },
-        body: ListView.builder(
-          itemBuilder: (context, index) {
-            if (index == 0) return _buildListHeader(context);
-            return _buildListItem(context, item.jobs[index - 1]);
-          },
-          itemCount: item.jobs.length + 1,
-          shrinkWrap: true,
-        ),
+        body: Container(
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildPanelItemBody(item.jobs),
+                  const SizedBox(height: 5),
+                  Row(children: [
+                    const Spacer(),
+                    _buildDeleteButton(context, item)
+                  ])
+                ])),
         isExpanded: item.isExpanded,
       );
     }).toList();
   }
 
-  Widget _buildListHeader(context) {
-    return ListTile(
-      title: Row(
-        children: const [
-          Expanded(child: Text('员工')),
-          Expanded(child: Text('工序')),
-          Expanded(child: Text('单价')),
-          Expanded(child: Text('数量')),
-          Expanded(child: Text('总价')),
-        ],
-      ),
+  Widget _buildPanelItemBody(jobs) {
+    return DataTable(columns: _buildTableColumn(), rows: _buildTableRow(jobs));
+  }
+
+  Widget _buildDeleteButton(context, item) {
+    return ElevatedButton(
+      child: const Text('删除工单'),
+      style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+      onPressed: () async {
+        bool res =
+            await showDoubleCheckDialog(context, '警告⚠️', '工单删除后不可恢复，是否确认');
+        if (!res) return;
+        await _onDeleteButtonClick(context, item);
+      },
     );
   }
 
-  Widget _buildListItem(context, Job job) {
-    return ListTile(
-      title: Row(
-        children: [
-          Expanded(child: Text(job.worker)),
-          Expanded(child: Text(job.process)),
-          Expanded(child: Text(job.price.toString())),
-          Expanded(child: Text(job.count.toString())),
-          Expanded(child: Text((job.price * job.count).toString())),
-        ],
-      ),
-    );
+  List<DataColumn> _buildTableColumn() {
+    return const [
+      DataColumn(
+          label: Expanded(
+              child: Text(
+        '员工',
+        textAlign: TextAlign.center,
+      ))),
+      DataColumn(
+          label: Expanded(
+              child: Text(
+        '工序',
+        textAlign: TextAlign.center,
+      ))),
+      DataColumn(
+          label: Expanded(
+              child: Text(
+        '单价',
+        textAlign: TextAlign.center,
+      ))),
+      DataColumn(
+          label: Expanded(
+              child: Text(
+        '数量',
+        textAlign: TextAlign.center,
+      ))),
+      DataColumn(
+          label: Expanded(
+              child: Text(
+        '总价',
+        textAlign: TextAlign.center,
+      ))),
+    ];
+  }
+
+  List<DataRow> _buildTableRow(List<Job> jobs) {
+    List<DataRow> dataRows = [];
+    for (var job in jobs) {
+      var sum = job.count * job.count;
+      dataRows.add(DataRow(cells: [
+        DataCell(Center(child: Text(job.worker))),
+        DataCell(Center(child: Text(job.process))),
+        DataCell(Center(child: Text(job.price.toString()))),
+        DataCell(Center(child: Text(job.count.toString()))),
+        DataCell(Center(child: Text(sum.toString()))),
+      ]));
+    }
+    return dataRows;
+  }
+
+  Future<void> _onDeleteButtonClick(context, item) async {
+    JobManager.instance.removeJob(item.jobs);
+    setState(() {
+      _items.remove(item);
+    });
   }
 
   Future<void> _onSaveButtonClick(BuildContext context) async {}

@@ -1,5 +1,5 @@
 class Job {
-  DateTime? ticket;
+  DateTime ticket;
   String period = "";
   String worker = "";
   String artifacts = "";
@@ -9,7 +9,7 @@ class Job {
   int valid = 1;
 
   Job(
-      {this.ticket,
+      {required this.ticket,
       required this.period,
       required this.worker,
       required this.artifacts,
@@ -30,7 +30,7 @@ class Job {
 
   Map<String, dynamic> toMap() {
     return {
-      'ticket': ticket?.millisecondsSinceEpoch,
+      'ticket': ticket.millisecondsSinceEpoch,
       'period': period,
       'worker': worker,
       'artifacts': artifacts,

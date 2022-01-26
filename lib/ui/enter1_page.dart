@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
 import 'package:smc_piecework/ui/common/artifacts_input_dialog.dart';

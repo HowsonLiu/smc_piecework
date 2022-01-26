@@ -37,6 +37,13 @@ class JobManager {
     }
   }
 
+  removeJob(List<Job> jobs) {
+    for (var j in jobs) {
+      _jobs.remove(j);
+      _dbHelper.remove(j);
+    }
+  }
+
   List<Job> getJobs(String period, Employee e) {
     return jobs
         .where(
@@ -104,6 +111,18 @@ class JobDataBaseHelper {
   Future<int?> insert(Job e) async {
     var db = await database;
     var res = await db?.insert(table, e.toMap());
+    return res;
+  }
+
+  Future<int?> remove(Job j) async {
+    var db = await database;
+    var res = await db?.rawDelete('''
+    delete from $table 
+    where $colTicket = ${j.ticket.microsecondsSinceEpoch} and $colPeriod = '${j.period}' and
+    $colWorker = '${j.worker}' and $colArtifacts = '${j.artifacts}' and
+    $colProcess = '${j.process}' and $colPrice = ${j.price} and
+    $colValid = ${j.valid}
+    ''');
     return res;
   }
 

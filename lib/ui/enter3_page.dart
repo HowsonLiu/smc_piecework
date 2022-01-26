@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
