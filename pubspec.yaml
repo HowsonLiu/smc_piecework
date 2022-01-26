@@ -40,6 +40,7 @@ dependencies:
   sqflite:
   shared_preferences:
   intl:
+  common_utils:
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
@@ -95,7 +96,8 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
       var employeeJobs = JobManager.instance.getJobs(widget.period, e);
       num sum = 0;
       for (var element in employeeJobs) {
-        sum += element.count * element.price;
+        var c = NumUtil.multiply(element.count, element.price);
+        sum = NumUtil.add(sum, c);
       }
       dataRows.add(DataRow(cells: [
         DataCell(Center(

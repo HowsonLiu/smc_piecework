@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/model/job.dart';
@@ -185,7 +186,7 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
   List<DataRow> _buildTableRow(List<Job> jobs) {
     List<DataRow> dataRows = [];
     for (var job in jobs) {
-      var sum = job.count * job.count;
+      var sum = NumUtil.multiply(job.count, job.price);
       dataRows.add(DataRow(cells: [
         DataCell(Center(child: Text(job.worker))),
         DataCell(Center(child: Text(job.process))),
