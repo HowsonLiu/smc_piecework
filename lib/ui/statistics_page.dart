@@ -4,7 +4,7 @@ import 'package:smc_piecework/ui/statistics_employee_page.dart';
 import 'package:smc_piecework/ui/statistics_ticket_page.dart';
 
 class StatisticsPage extends StatelessWidget {
-  const StatisticsPage() : super();
+  const StatisticsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

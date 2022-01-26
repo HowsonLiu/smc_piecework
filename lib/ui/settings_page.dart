@@ -7,7 +7,7 @@ import 'package:smc_piecework/ui/common/message_dialog.dart';
 import 'package:smc_piecework/ui/period_page.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage() : super();
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

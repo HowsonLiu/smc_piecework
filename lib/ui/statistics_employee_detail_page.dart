@@ -1,12 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:smc_piecework/manager/employee_manager.dart';
-import 'package:smc_piecework/manager/job_manager.dart';
-import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/employee.dart';
 import 'package:smc_piecework/model/job.dart';
-import 'package:smc_piecework/model/period.dart';
 import 'package:smc_piecework/utils/time_utils.dart';
 
 class StatisticsEmployeeDetailPage extends StatefulWidget {
