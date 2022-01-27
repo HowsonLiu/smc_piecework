@@ -26,18 +26,26 @@ class EmployeeManager {
     }
   }
 
-  fetchFromNet() async {
-    var l = await _netHelper.query();
-    if (l != null) {
-      _fromList(l);
+  Future<bool> fetchFromNet() async {
+    try {
+      var l = await _netHelper.query();
+      if (l != null) {
+        _fromList(l);
+        return true;
+      }
+    } catch (e) {
+      return false;
     }
+    return false;
   }
 
-  fetchFromFile() async {
+  Future<bool> fetchFromFile() async {
     var l = await _fileHelper.fetch();
     if (l != null) {
       _fromList(l);
+      return true;
     }
+    return false;
   }
 
   overrideDatabase() async {

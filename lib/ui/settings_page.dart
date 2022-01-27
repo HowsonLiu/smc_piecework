@@ -51,7 +51,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       title: const Text("从网络更新数据"),
                       onTap: () {
-                        _updateFromNet();
+                        _updateFromNet(context);
                       },
                     ),
                     ListTile(
@@ -93,11 +93,19 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  _updateFromNet() async {
-    await EmployeeManager.instance.fetchFromNet();
+  _updateFromNet(context) async {
+    bool eRes = await EmployeeManager.instance.fetchFromNet();
     await EmployeeManager.instance.overrideDatabase();
-    await ArtifactsManager.instance.fetchFromNet();
+    bool aRes = await ArtifactsManager.instance.fetchFromNet();
     await ArtifactsManager.instance.overrideDatabase();
+    if (eRes && aRes) {
+      await showMessageDialog(context, '成功', '从网络更新数据成功');
+    } else {
+      var l = [];
+      if (!eRes) l.add('员工数据');
+      if (!aRes) l.add('工件数据');
+      await showMessageDialog(context, '错误', l.join(', ') + '拉取失败');
+    }
   }
 
   _updateFromFile() async {
