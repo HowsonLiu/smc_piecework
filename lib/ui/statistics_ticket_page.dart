@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/model/job.dart';
 import 'package:smc_piecework/ui/common/double_check_dialog.dart';
@@ -54,11 +55,11 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
           onPressed: () => _onSaveButtonClick(context),
         ),
         body: Container(
-          margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+          margin: EdgeInsets.only(left: 10.w, right: 10.w, top: 30.h),
           child: Column(
             children: [
               _buildPeriodTitle(),
-              const SizedBox(height: 50),
+              SizedBox(height: 20.h),
               _buildPanelList()
             ],
           ),
@@ -68,7 +69,7 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
   Widget _buildPeriodTitle() {
     return Text(
       widget.period,
-      style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 50.sp, fontWeight: FontWeight.bold),
     );
   }
 
@@ -115,12 +116,12 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
           );
         },
         body: Container(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            padding: EdgeInsets.all(5.w),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildPanelItemBody(item.jobs),
-                  const SizedBox(height: 5),
+                  SizedBox(height: 5.h),
                   Row(children: [
                     const Spacer(),
                     _buildDeleteButton(context, item)
@@ -132,7 +133,10 @@ class _StatisticsTicketPageState extends State<StatisticsTicketPage> {
   }
 
   Widget _buildPanelItemBody(jobs) {
-    return DataTable(columns: _buildTableColumn(), rows: _buildTableRow(jobs));
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+            columns: _buildTableColumn(), rows: _buildTableRow(jobs)));
   }
 
   Widget _buildDeleteButton(context, item) {

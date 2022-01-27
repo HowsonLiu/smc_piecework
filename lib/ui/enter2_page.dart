@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
 import 'package:smc_piecework/model/job.dart';
@@ -35,13 +36,11 @@ class _Enter2PageState extends State<Enter2Page> {
           ],
         ),
         body: Container(
-            margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+            margin: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w),
             child: Column(children: [
               _buildArtifactsTitle(),
               _buildCountTitle(),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               _buildListView(),
             ])));
   }
@@ -92,26 +91,30 @@ class _Enter2PageState extends State<Enter2Page> {
 
   Widget _buildArtifactsTitle() {
     return Container(
-        margin: const EdgeInsets.all(20),
+        margin: EdgeInsets.only(top: 20.h, bottom: 20.h),
         child: Text(
           widget.arti.name,
-          style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 50.sp,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
         ));
   }
 
   Widget _buildCountTitle() {
     return Container(
-        margin: const EdgeInsets.all(20),
+        margin: EdgeInsets.only(bottom: 20.h),
         child: Text(
           '${widget.count}件',
-          style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ));
   }
 
   Widget _buildListView() {
     return Expanded(
         child: ListView.builder(
-      padding: const EdgeInsets.only(left: 70, right: 70),
       itemBuilder: _buildListItem,
       itemCount: widget.arti.processes.length,
     ));
@@ -127,15 +130,15 @@ class _Enter2PageState extends State<Enter2Page> {
     return ListTile(
       leading: Text(
         process.processIndex.toString(),
-        style: const TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20.sp),
       ),
       title: Text(
         process.processName,
-        style: const TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20.sp),
       ),
       subtitle: Text(
         subTitle,
-        style: const TextStyle(fontSize: 15),
+        style: TextStyle(fontSize: 15.sp),
       ),
       trailing: Icon(
         _tempJobs[process]?.isNotEmpty ?? false

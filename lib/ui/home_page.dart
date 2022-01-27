@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 
 import 'package:smc_piecework/manager/period_manager.dart';
@@ -18,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    _initScreenUtil(context);
     return Scaffold(
         appBar: AppBar(
           title: const Text("SMC"),
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
               ));
             }),
             _buildHomeCard(
-                'assets/image/home_page/setting.png', '设置', Colors.black, () {
+                'assets/image/home_page/setting.png', '设置', Colors.white, () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
                   return const SettingsPage();
@@ -65,12 +67,23 @@ class _HomePageState extends State<HomePage> {
     JobManager.instance.fetchFromDataBase();
   }
 
+  _initScreenUtil(context) {
+    ScreenUtil.init(
+      BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height,
+      ),
+      designSize: const Size(360, 690),
+      context: context,
+    );
+  }
+
   Widget _buildHomeCard(String imageUrl, String title, Color? titleColor,
       void Function()? callback) {
     return Expanded(
       child: Card(
           margin:
-              const EdgeInsets.only(left: 60, right: 60, top: 20, bottom: 20),
+              EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h, bottom: 10.h),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           clipBehavior: Clip.antiAlias,
@@ -89,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                       child: Text(
                         title,
                         style: TextStyle(
-                            fontSize: 50,
+                            fontSize: 30.sp,
                             color: titleColor,
                             fontWeight: FontWeight.bold),
                       ),

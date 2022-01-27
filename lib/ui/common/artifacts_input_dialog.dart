@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/artifacts_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
 
@@ -14,6 +15,7 @@ Future<Artifacts?> showArtifactsInputDialog(
           title: Text(title),
           content: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
@@ -31,7 +33,7 @@ Future<Artifacts?> showArtifactsInputDialog(
                     });
                   },
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 10.h),
                 SizedBox(
                     width: MediaQuery.of(context).size.width / 2,
                     height: MediaQuery.of(context).size.height / 2,

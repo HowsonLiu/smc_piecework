@@ -41,6 +41,7 @@ dependencies:
   shared_preferences:
   intl:
   common_utils:
+  flutter_screenutil:
 
 dev_dependencies:
   flutter_test:

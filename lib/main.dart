@@ -12,19 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Flutter Demo',
-      // theme: ThemeData(
-      //   primarySwatch: Colors.purple,
-      //   textTheme: const TextTheme(
-      //     subtitle1: TextStyle(fontSize: 30.0),
-      //     bodyText1: TextStyle(fontSize: 20.0),
-      //     button: TextStyle(fontSize: 30.0),
-      //     headline1: TextStyle(fontSize: 30.0),
-      //   ),
-      //   iconTheme: const IconThemeData(
-      //     size: 30.0,
-      //   ),
-      // ),
+      title: 'SMC',
       home: HomePage(),
     );
   }

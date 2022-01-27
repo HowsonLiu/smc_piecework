@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
 import 'package:smc_piecework/ui/common/artifacts_input_dialog.dart';
@@ -32,7 +33,7 @@ class _Enter1PageState extends State<Enter1Page> {
           title: const Text("入仓"),
         ),
         body: Container(
-          margin: const EdgeInsets.all(40),
+          margin: EdgeInsets.all(10.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -85,7 +86,7 @@ class _Enter1PageState extends State<Enter1Page> {
     return Text(
       PeriodManager.instance.curPeriod?.name ?? '周期设置',
       style: TextStyle(
-          fontSize: 50,
+          fontSize: 30.sp,
           color: (PeriodManager.instance.curPeriod != null
               ? Colors.black
               : Colors.grey),
@@ -98,7 +99,7 @@ class _Enter1PageState extends State<Enter1Page> {
     return Text(
       _artifacts?.name ?? '未选择工件',
       style: TextStyle(
-          fontSize: 50,
+          fontSize: 30.sp,
           color: (_artifacts != null ? Colors.black : Colors.grey),
           fontWeight: FontWeight.bold),
       textAlign: TextAlign.center,
@@ -109,7 +110,7 @@ class _Enter1PageState extends State<Enter1Page> {
     return Text(
       _count != null ? '$_count件' : '未设置数量',
       style: TextStyle(
-          fontSize: 50,
+          fontSize: 30.sp,
           color: (_count != null ? Colors.black : Colors.grey),
           fontWeight: FontWeight.bold),
       textAlign: TextAlign.center,
@@ -118,7 +119,7 @@ class _Enter1PageState extends State<Enter1Page> {
 
   Widget _buildControlBox() {
     return Container(
-        padding: const EdgeInsets.only(left: 200, right: 200),
+        padding: EdgeInsets.only(left: 10.w, right: 10.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

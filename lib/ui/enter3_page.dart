@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/period_manager.dart';
 import 'package:smc_piecework/model/artifacts.dart';
@@ -49,13 +50,13 @@ class _Enter3PageState extends State<Enter3Page> {
         ],
       ),
       body: Container(
-        margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+        margin: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w),
         child: Column(
           children: [
             _buildProcessTitle(),
-            const SizedBox(height: 30),
+            SizedBox(height: 30.h),
             _buildArtifactsTitle(),
-            const SizedBox(height: 30),
+            SizedBox(height: 30.h),
             _buildListView()
           ],
         ),
@@ -66,21 +67,22 @@ class _Enter3PageState extends State<Enter3Page> {
   Widget _buildProcessTitle() {
     return Text(
       widget.process.processName,
-      style: const TextStyle(fontSize: 70, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 70.sp, fontWeight: FontWeight.bold),
+      textAlign: TextAlign.center,
     );
   }
 
   Widget _buildArtifactsTitle() {
     return Text(
       '${widget.process.artifactsName}(${widget.count}件)',
-      style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold),
+      textAlign: TextAlign.center,
     );
   }
 
   Widget _buildListView() {
     return Expanded(
         child: ListView.builder(
-      padding: const EdgeInsets.only(left: 70, right: 70),
       itemBuilder: (context, index) {
         if (index == 0) return _buildHeader();
         return _buildItems(index);

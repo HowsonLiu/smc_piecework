@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smc_piecework/manager/employee_manager.dart';
 import 'package:smc_piecework/manager/job_manager.dart';
 import 'package:smc_piecework/ui/statistics_employee_detail_page.dart';
@@ -34,60 +35,54 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
           onPressed: () => _onSaveButtonClick(context),
         ),
         body: Container(
-          margin: const EdgeInsets.only(left: 50, right: 50, top: 50),
+          margin: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w),
           child: Column(
-            children: [
-              _buildPeriodTitle(),
-              const SizedBox(
-                height: 50,
-              ),
-              _buildTable()
-            ],
+            children: [_buildPeriodTitle(), _buildTable()],
           ),
         ));
   }
 
   Widget _buildPeriodTitle() {
-    return Text(
-      widget.period,
-      style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-    );
+    return Container(
+        margin: EdgeInsets.only(top: 20.h, bottom: 20.h),
+        child: Text(
+          widget.period,
+          style: TextStyle(fontSize: 50.sp, fontWeight: FontWeight.bold),
+        ));
   }
 
   Widget _buildTable() {
     return Expanded(
         child: SingleChildScrollView(
-            child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        DataTable(columns: const [
-          DataColumn(
-              label: Expanded(
-                  child: Text(
-            '工号',
-            textAlign: TextAlign.center,
-          ))),
-          DataColumn(
-              label: Expanded(
-                  child: Text(
-            '名字',
-            textAlign: TextAlign.center,
-          ))),
-          DataColumn(
-              label: Expanded(
-                  child: Text(
-            '本月薪资',
-            textAlign: TextAlign.center,
-          ))),
-          DataColumn(
-              label: Expanded(
-                  child: Text(
-            '详情',
-            textAlign: TextAlign.center,
-          ))),
-        ], rows: _buildTableRow()),
-      ],
-    )));
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              child: DataTable(columns: const [
+                DataColumn(
+                    label: Expanded(
+                        child: Text(
+                  '工号',
+                  textAlign: TextAlign.center,
+                ))),
+                DataColumn(
+                    label: Expanded(
+                        child: Text(
+                  '名字',
+                  textAlign: TextAlign.center,
+                ))),
+                DataColumn(
+                    label: Expanded(
+                        child: Text(
+                  '本月薪资',
+                  textAlign: TextAlign.center,
+                ))),
+                DataColumn(
+                    label: Expanded(
+                        child: Text(
+                  '详情',
+                  textAlign: TextAlign.center,
+                ))),
+              ], rows: _buildTableRow()),
+            )));
   }
 
   List<DataRow> _buildTableRow() {
@@ -116,7 +111,7 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
             child: TextButton(
           child: const Text('查看详情'),
           onPressed: sum != 0
-              ? () => _jumpToDetailPage(context, e, employeeJobs)
+              ? () => _jumpToDetailPage(context, e, employeeJobs, sum)
               : null,
         )))
       ]));
@@ -124,10 +119,10 @@ class _StatisticsEmployeePageState extends State<StatisticsEmployeePage> {
     return dataRows;
   }
 
-  _jumpToDetailPage(context, employee, employeeJobs) {
+  _jumpToDetailPage(context, employee, employeeJobs, sum) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return StatisticsEmployeeDetailPage(
-        period: widget.period,
+        sum: sum.toString(),
         employee: employee,
         employeeJobs: employeeJobs,
       );
