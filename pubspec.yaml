@@ -38,6 +38,7 @@ dependencies:
   csv: ^5.0.1
   http: 
   sqflite:
+  sqflite_common_ffi:
   shared_preferences:
   intl:
   common_utils:
